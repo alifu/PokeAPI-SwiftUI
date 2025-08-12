@@ -31,4 +31,74 @@ enum ColorUtils {
     static let grayscaleLight: Color = Color(hex: "#E0E0E0")
     static let background: Color = Color(hex: "#EFEFEF")
     static let white: Color = Color(hex: "#FFFFFF")
+    static let wireframe: Color = Color(hex: "#B8B8B8")
+}
+
+enum ColorType: String {
+    case bug
+    case dark
+    case dragon
+    case electric
+    case fairy
+    case fighting
+    case fire
+    case flying
+    case ghost
+    case grass
+    case ground
+    case ice
+    case poison
+    case psychic
+    case rock
+    case steel
+    case water
+    case none
+    
+    var color: Color {
+        switch self {
+        case .bug:
+            return ColorUtils.bug
+        case .dark:
+            return ColorUtils.dark
+        case .dragon:
+            return ColorUtils.dragon
+        case .electric:
+            return ColorUtils.electric
+        case .fairy:
+            return ColorUtils.fairy
+        case .fighting:
+            return ColorUtils.fighting
+        case .fire:
+            return ColorUtils.fire
+        case .flying:
+            return ColorUtils.flying
+        case .ghost:
+            return ColorUtils.ghost
+        case .grass:
+            return ColorUtils.grass
+        case .ground:
+            return ColorUtils.ground
+        case .ice:
+            return ColorUtils.ice
+        case .poison:
+            return ColorUtils.poison
+        case .psychic:
+            return ColorUtils.psychic
+        case .rock:
+            return ColorUtils.rock
+        case .steel:
+            return ColorUtils.steel
+        case .water:
+            return ColorUtils.water
+        case .none:
+            return ColorUtils.wireframe
+        }
+    }
+}
+
+func colorStringToType(_ colorString: String?) -> Color {
+    guard let colorString else {
+        return ColorType.none.color
+    }
+    return ColorType(rawValue: colorString.lowercased())?.color ?? ColorType.none.color
 }

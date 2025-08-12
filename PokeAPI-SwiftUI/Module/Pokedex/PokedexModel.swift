@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Pokemon {
+struct Pokedex {
     
     struct Request {
         let limit: Int
@@ -35,6 +35,16 @@ struct Pokemon {
         var imageURL: String? {
             guard let id = id else { return nil }
             return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(id).png"
+        }
+        
+        init(url: String, name: String) {
+            self.name = name
+            self.url = url
+        }
+        
+        init(from pokemon: PokemonEntity) {
+            self.name = pokemon.name
+            self.url = pokemon.url
         }
     }
 }

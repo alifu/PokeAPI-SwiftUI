@@ -10,13 +10,13 @@ import SwiftUI
 struct PokedexView: View {
     
     @StateObject var viewModel = PokedexViewModel()
+    @State private var selectedPokemon: String?
     
-    let items = 1...100 // Example data
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
         GridItem(.flexible())
-    ] // Three flexible columns
+    ]
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -53,14 +53,30 @@ struct PokedexView: View {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 8) {
                             ForEach(viewModel.pokemons, id: \.id) { item in
-                                PokemonCardComponent(
-                                    name: item.name,
-                                    imageURL: item.imageURL,
-                                    idTag: item.id ?? ""
-                                )
+                                Button {
+                                    selectedPokemon = item.name
+                                } label: {
+                                    PokemonCardComponent(
+                                        name: item.name,
+                                        imageURL: item.imageURL,
+                                        idTag: item.id ?? ""
+                                    )
+                                }
                             }
                         }
                         .padding()
+                        .background(
+                            NavigationLink(
+                                destination: selectedPokemon.map { PokemonView(viewModel: PokemonViewModel(name: $0)) },
+                                isActive: Binding(
+                                    get: { selectedPokemon != nil },
+                                    set: { if !$0 { selectedPokemon = nil } }
+                                )
+                            ) {
+                                EmptyView()
+                            }
+                                .hidden()
+                        )
                     }
                 }
                 .padding(8)
@@ -71,6 +87,10 @@ struct PokedexView: View {
 
 struct PokedexView_Previews: PreviewProvider {
     static var previews: some View {
-        PokedexView()
+        PokedexView(viewModel:  {
+            let vm = MockPokedexViewModel()
+            vm.fetchPokedex()
+            return vm
+        }())
     }
 }

@@ -10,9 +10,9 @@ import SwiftUI
 struct TypeComponent: View {
     let text: String
     var systemImage: String? = nil       // optional SF Symbol
-    var font: Font = .subheadline
-    var textColor: Color = .primary
-    var backgroundColor: Color = Color(.systemGray5)
+    var font: Font = FontUtils.headerSubtitle3
+    var textColor: Color = ColorUtils.white
+    var backgroundColor: Color = ColorUtils.grayscaleMedium
     var paddingV: CGFloat = 6
     var paddingH: CGFloat = 12
     var cornerRadius: CGFloat = 16

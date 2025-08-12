@@ -45,6 +45,7 @@ struct PokemonCardComponent: View {
                     ProgressView()
                 }
             }
+            .pipeline(.cached)
             .frame(width: 60, height: 60)
             
             VStack {
@@ -56,7 +57,7 @@ struct PokemonCardComponent: View {
                             .renderingMode(.template)
                             .frame(width: 12, height: 12)
                             .foregroundColor(ColorUtils.grayscaleMedium)
-                        Text(idTag)
+                        Text(String(format: "%03d", Int(idTag) ?? 0))
                             .font(FontUtils.caption)
                             .frame(height: 12)
                             .foregroundColor(ColorUtils.grayscaleMedium)

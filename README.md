@@ -11,10 +11,13 @@ This project uses SPM as a tool for depedency librarys
 
 ## TODO
 - [x] Add dependency librarys
-- [ ] Local DB
+- [x] Local DB
 - [x] Fetch PokeAPI in Pokedex
 - [ ] Search Pokemon in Pokedex
-- [ ] Detail Page
+- [ ] Sort Pokemon in Pokedex
+- [x] Detail Page
+- [ ] Poppins Font
+- [ ] Previous/next Pokemon in Detail Page
 
 ## PokeAPI Fetching Logic
 * **Home Journey**
