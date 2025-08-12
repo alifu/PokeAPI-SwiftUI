@@ -18,6 +18,7 @@ This project uses SPM as a tool for depedency librarys
 - [x] Detail Page
 - [ ] Poppins Font
 - [ ] Previous/next Pokemon in Detail Page
+- [ ] Widget
 
 ## PokeAPI Fetching Logic
 * **Home Journey**
