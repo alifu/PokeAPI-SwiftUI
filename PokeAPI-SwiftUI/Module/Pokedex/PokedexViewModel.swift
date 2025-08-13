@@ -7,10 +7,13 @@
 
 import Combine
 import Foundation
+import SwiftUI
 
 class PokedexViewModel: ObservableObject {
     
     @Published var pokemons: [Pokedex.Result] = []
+    @Published var searchText: String = ""
+    @Published private(set) var filteredPokemons: [Pokedex.Result] = []
     @Published var errorMessage: String = ""
     private var cancellables: Set<AnyCancellable> = []
     private let apiService: APIServiceProtocol
@@ -20,6 +23,16 @@ class PokedexViewModel: ObservableObject {
     init(apiService: APIServiceProtocol = APIService()) {
         self.apiService = apiService
         self.fetchPokedex()
+        Publishers.CombineLatest($searchText, $pokemons)
+            .map { search, pokemons in
+                guard !search.isEmpty else {
+                    return pokemons
+                }
+                return pokemons.filter {
+                    $0.name.localizedCaseInsensitiveContains(search)
+                }
+            }
+            .assign(to: &$filteredPokemons)
     }
     
     func fetchPokedex() {

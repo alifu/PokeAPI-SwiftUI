@@ -38,7 +38,7 @@ struct PokedexView: View {
                 .padding(.leading, 16)
                 
                 HStack(spacing: 0) {
-                    SearchBoxComponent(text: .constant(""))
+                    SearchBoxComponent(text: $viewModel.searchText)
                         .padding(.leading, 16)
                         .padding(.trailing, 16)
                     
@@ -52,7 +52,7 @@ struct PokedexView: View {
                     
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 8) {
-                            ForEach(viewModel.pokemons, id: \.id) { item in
+                            ForEach(viewModel.filteredPokemons, id: \.id) { item in
                                 Button {
                                     selectedPokemon = item.name
                                 } label: {
