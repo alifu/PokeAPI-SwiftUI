@@ -10,6 +10,7 @@ import SwiftUI
 struct PokedexView: View {
     
     @StateObject var viewModel = PokedexViewModel()
+    @State private var buttonFrame: CGRect = .zero
     @State private var selectedPokemon: String?
     
     let columns = [
@@ -42,8 +43,10 @@ struct PokedexView: View {
                         .padding(.leading, 16)
                         .padding(.trailing, 16)
                     
-                    SortButtonComponent(isSorted: .constant(false))
-                        .padding(.trailing, 16)
+                    SortButtonComponent(isSorted: .constant(false), buttonFrame: $buttonFrame) {
+                        viewModel.showSortMenu.toggle()
+                    }
+                    .padding(.trailing, 16)
                 }
                 
                 ZStack {
@@ -82,6 +85,29 @@ struct PokedexView: View {
                 .padding(8)
             }
         }
+        .overlay(
+            Group {
+                if viewModel.showSortMenu {
+                    VStack(alignment: .trailing, spacing: 0) {
+                        Spacer().frame(height: buttonFrame.origin.y)
+                        SortComponent(selectedOption: $viewModel.selectedOption)
+                            .shadow(radius: 4)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 8)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .transition(.opacity)
+                    .animation(.easeInOut, value: viewModel.showSortMenu)
+                }
+            }
+        )
+    }
+}
+
+struct ButtonFrameKey: PreferenceKey {
+    static var defaultValue: CGRect = .zero
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
+        value = nextValue()
     }
 }
 

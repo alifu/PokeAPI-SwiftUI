@@ -14,7 +14,7 @@ This project uses SPM as a tool for depedency librarys
 - [x] Local DB
 - [x] Fetch PokeAPI in Pokedex
 - [x] Search Pokemon in Pokedex
-- [ ] Sort Pokemon in Pokedex
+- [x] Sort Pokemon in Pokedex
 - [x] Detail Page
 - [ ] Poppins Font
 - [ ] Previous/next Pokemon in Detail Page

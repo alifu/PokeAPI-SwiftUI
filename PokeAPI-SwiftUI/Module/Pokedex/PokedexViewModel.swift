@@ -15,6 +15,8 @@ class PokedexViewModel: ObservableObject {
     @Published var searchText: String = ""
     @Published private(set) var filteredPokemons: [Pokedex.Result] = []
     @Published var errorMessage: String = ""
+    @Published var showSortMenu: Bool = false
+    @Published var selectedOption: SortComponentType = .none
     private var cancellables: Set<AnyCancellable> = []
     private let apiService: APIServiceProtocol
     private let limit = 24
@@ -23,14 +25,35 @@ class PokedexViewModel: ObservableObject {
     init(apiService: APIServiceProtocol = APIService()) {
         self.apiService = apiService
         self.fetchPokedex()
-        Publishers.CombineLatest($searchText, $pokemons)
-            .map { search, pokemons in
-                guard !search.isEmpty else {
-                    return pokemons
+        // Combine search + sort into one pipeline
+        Publishers.CombineLatest($searchText, $selectedOption)
+            .combineLatest($pokemons)
+            .map { (searchAndSort, pokemons) -> [Pokedex.Result] in
+                let (search, sortOption) = searchAndSort
+                
+                // 1️⃣ Search filter
+                var result = pokemons
+                if !search.isEmpty {
+                    result = result.filter {
+                        $0.name.localizedCaseInsensitiveContains(search)
+                    }
                 }
-                return pokemons.filter {
-                    $0.name.localizedCaseInsensitiveContains(search)
+                
+                // 2️⃣ Sorting
+                switch sortOption {
+                case .name:
+                    result.sort { $0.name < $1.name }
+                case .number:
+                    result.sort { (Int($0.id ?? "0") ?? 0) < (Int($1.id ?? "0") ?? 0) }
+                case .none:
+                    break
                 }
+                
+                if self.showSortMenu {
+                    self.showSortMenu.toggle()
+                }
+                
+                return result
             }
             .assign(to: &$filteredPokemons)
     }
