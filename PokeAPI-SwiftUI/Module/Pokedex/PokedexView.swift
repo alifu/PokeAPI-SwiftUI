@@ -11,7 +11,7 @@ struct PokedexView: View {
     
     @StateObject var viewModel = PokedexViewModel()
     @State private var buttonFrame: CGRect = .zero
-    @State private var selectedPokemon: String?
+    @State private var selectedPokemon: Int?
     
     let columns = [
         GridItem(.flexible()),
@@ -49,15 +49,35 @@ struct PokedexView: View {
                     .padding(.trailing, 16)
                 }
                 
+                NavigationLink(
+                    destination: Group {
+                        if let index = selectedPokemon {
+                            PokemonView(
+                                viewModel: PokemonViewModel(
+                                    selectedPokemon: index,
+                                    pokedex: viewModel.pokemons
+                                )
+                            )
+                        }
+                    },
+                    isActive: Binding(
+                        get: { selectedPokemon != nil },
+                        set: { if !$0 { selectedPokemon = nil } }
+                    )
+                ) {
+                    EmptyView()
+                }
+                .hidden()
+                
                 ZStack {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(ColorUtils.white)
                     
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 8) {
-                            ForEach(viewModel.filteredPokemons, id: \.id) { item in
+                            ForEach(Array(viewModel.filteredPokemons.enumerated()), id: \.1.id) { index, item in
                                 Button {
-                                    selectedPokemon = item.name
+                                    selectedPokemon = index
                                 } label: {
                                     PokemonCardComponent(
                                         name: item.name,
@@ -68,18 +88,6 @@ struct PokedexView: View {
                             }
                         }
                         .padding()
-                        .background(
-                            NavigationLink(
-                                destination: selectedPokemon.map { PokemonView(viewModel: PokemonViewModel(name: $0)) },
-                                isActive: Binding(
-                                    get: { selectedPokemon != nil },
-                                    set: { if !$0 { selectedPokemon = nil } }
-                                )
-                            ) {
-                                EmptyView()
-                            }
-                                .hidden()
-                        )
                     }
                 }
                 .padding(8)

@@ -12,7 +12,8 @@ class PokemonViewModel: ObservableObject {
     
     @Published var errorMessage: String?
     @Published var id: Int = 0
-    @Published var name: String?
+    @Published var name: String = ""
+    @Published var selectedPokemon: Int
     @Published var abilities: [String] = []
     @Published var height: Double?
     @Published var weight: Double?
@@ -22,18 +23,20 @@ class PokemonViewModel: ObservableObject {
     @Published var about: String = ""
     private var cancellables: Set<AnyCancellable> = []
     private let apiService: APIServiceProtocol
+    private let pokemonNavigator: PokemonNavigator
     private let limit = 24
     private var offset = 0
     
-    init(apiService: APIServiceProtocol = APIService(), name: String) {
+    init(apiService: APIServiceProtocol = APIService(), selectedPokemon: Int, pokedex: [Pokedex.Result]) {
         self.apiService = apiService
-        self.name = name
+        self.selectedPokemon = selectedPokemon
+        self.pokemonNavigator = PokemonNavigator(results: pokedex, startIndex: selectedPokemon)
         self.fetchPokemons()
         self.fetchPokemonSpecies()
     }
     
     func fetchPokemons() {
-        guard let `name` = name else { return }
+        guard let `name` = pokemonNavigator.currentSubject.value?.name else { return }
         if let pokemon = RealmService.shared.getPokemon(withName: name) {
             self.abilities = Array(pokemon.abilities.map {
                 String($0.name)
@@ -97,7 +100,7 @@ class PokemonViewModel: ObservableObject {
     }
     
     func fetchPokemonSpecies() {
-        guard let `name` = name else { return }
+        guard let `name` = pokemonNavigator.currentSubject.value?.name else { return }
         if let pokemon = RealmService.shared.getPokemonSpecies(withName: name) {
             self.about = pokemon.flavourTextEntries.first?.flavourText ?? ""
         } else {
@@ -118,5 +121,17 @@ class PokemonViewModel: ObservableObject {
                 }
                 .store(in: &cancellables)
         }
+    }
+    
+    func navigateToNextPokemon() {
+        pokemonNavigator.moveNext()
+        self.fetchPokemons()
+        self.fetchPokemonSpecies()
+    }
+    
+    func navigateToPreviousPokemon() {
+        pokemonNavigator.movePrevious()
+        self.fetchPokemons()
+        self.fetchPokemonSpecies()
     }
 }

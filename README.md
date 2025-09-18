@@ -63,11 +63,11 @@ For detailed testing information, see [PokeAPI-SwiftUITests/README.md](PokeAPI-S
 - [x] **Combine Integration**: Reactive programming patterns
 - [x] **Error Handling**: Comprehensive error management
 - [x] **Mock Services**: Isolated testing infrastructure
+- [x] **Navigation**: Previous/next Pokemon in detail pages
 
 ## 🚧 Future Enhancements
 
 - [ ] **Poppins Font**: Custom typography implementation
-- [ ] **Navigation**: Previous/next Pokemon in detail pages
 - [ ] **Widgets**: iOS home screen widgets
 - [ ] **Pagination**: Load more functionality for large datasets
 - [ ] **Accessibility**: Enhanced accessibility features

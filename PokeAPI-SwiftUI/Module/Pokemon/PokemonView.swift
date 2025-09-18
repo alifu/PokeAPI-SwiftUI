@@ -39,7 +39,7 @@ struct PokemonView: View {
                         .frame(width: 32, height: 32)
                 }
                 
-                Text(viewModel.name?.capitalized ?? "")
+                Text(viewModel.name.capitalized)
                     .font(FontUtils.headerHeadline)
                     .foregroundColor(ColorUtils.white)
                     .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8))
@@ -72,7 +72,7 @@ struct PokemonView: View {
             Spacer()
             
             Button {
-                print("previous")
+                viewModel.navigateToPreviousPokemon()
             } label: {
                 Image("chevron_left")
                     .resizable()
@@ -99,7 +99,7 @@ struct PokemonView: View {
             .frame(width: 200)
             
             Button {
-                print("next")
+                viewModel.navigateToNextPokemon()
             } label: {
                 Image("chevron_right")
                     .resizable()
@@ -259,7 +259,7 @@ fileprivate func contentView(viewModel: PokemonViewModel) -> some View {
 struct PokemonView_Previews: PreviewProvider {
     static var previews: some View {
         PokemonView(viewModel: {
-            let vm = MockPokemonViewModel(name: "Bulbasaur")
+            let vm = MockPokemonViewModel(selectedPokemon: 0, pokedex: [])
             vm.fetchPokemons()
             return vm
         }())
